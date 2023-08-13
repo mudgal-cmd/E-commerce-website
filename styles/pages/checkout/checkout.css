@@ -1,0 +1,218 @@
+.main{
+  margin-top: 140px;
+  max-width: 1100px;
+  padding-left: 30px;
+  padding-right: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cart-item-image{
+  width: 100px;
+  /* border: 1px solid black; */
+  vertical-align: top;
+  padding-left: 15px;
+  padding-top: 20px;
+}
+
+.cart-item-container,
+.payment-summary-container{
+  padding: 18px;
+  border-radius: 4px;
+  border: 1px solid rgb(222, 222, 222);
+}
+
+.cart-item-container{
+  margin-bottom: 12px;
+}
+
+.cart-item-details{
+  vertical-align: top;
+  padding-top: 20px;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+@media(max-width: 1000px){
+  .cart-item-details-grid{
+    grid-template-columns: 100px 1fr;
+    row-gap: 30px;
+  }
+}
+
+.checkout-grid{
+ display: grid;
+ grid-template-columns: 1fr 350px;
+ column-gap: 12px;
+ align-items: start;
+ /* margin-bottom: 50px; */
+}
+
+@media (max-width : 1000px){
+  .main{
+    max-width: 500px;
+  }
+  .checkout-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkout-page-title{
+  font-weight: bold;
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.order-delivery-date{
+  font-size: 19px;
+  font-weight: bold;
+  color: rgba(0, 118, 0);
+  padding-left: 16px;
+  padding-top: 20px;
+}
+
+.delivery-options{
+  display: inline-block;
+}
+
+.cart-item-name{
+  width: 270px;
+  font-weight: bold;
+}
+
+.cart-item-price{
+  color: rgb(177, 39, 4);
+  font-weight: bold;
+  padding-top: 8px;
+}
+
+.cart-item-quantity{
+  padding-top: 6px;
+}
+
+.cart-item-quantity-update-link,
+.cart-item-quantity-delete-link{
+  color: rgb(1, 124, 182);
+  cursor: pointer;
+  padding-left: 3px;
+}
+
+.cart-item-quantity-update-link:hover,
+.cart-item-quantity-delete-link:hover{
+  color: rgb(196, 80, 0);
+}
+
+.delivery-options{
+  margin-top: 20px;
+  margin-left: 25px;
+}
+
+@media (max-width:1000px){
+  .delivery-options{
+    grid-column: 1 / span 2;
+  }
+}
+
+.delivery-options-title{
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.delivery-option{
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.delivery-option-date,
+.delivery-option-price{
+  font-size: 15px;
+}
+
+
+.delivery-option-price{
+  color: rgb(120, 120, 120);
+  /* margin-bottom: 20px; */
+}
+
+.delivery-option-input{
+  margin-left: 0px;
+  cursor: pointer;
+}
+
+.delivery-option-date{
+  color: rgb(0, 118, 0);
+  font-weight: bold;
+}
+
+.payment-summary-title{
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.payment-summary-container{
+  display: grid;
+  padding-bottom: 5px;
+}
+
+@media (max-width:1000px){
+  .payment-summary-container{
+    /* grid-row: 1 means this element will be placed into row
+      1 in the grid, i.e, it will be displayed first(on top of the items in the cart). 
+      (Normally, the row that an element is
+      placed in is determined by the order of the elements in
+      the HTML. grid-row overrides this default ordering). */
+
+      grid-row: 1;
+      margin-bottom: 12px;
+  }
+}
+
+.payment-summary-row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.subtotal-row{
+  border-top: 1px solid rgb(222, 222, 222);
+}
+
+.subtotal-row{
+  padding-top: 9px;
+}
+
+.order-total{
+  border-top: 1px solid rgb(222, 222, 222);
+  padding-top: 18px;
+  font-size: 18px;
+  font-weight: bold;
+  color: crimson;
+}
+
+.payment-summary-money{
+  display: inline-block;
+}
+
+/* .shipping-charges{
+  border-bottom: 1px solid rgb(211, 211, 211);
+} */
+
+.order-total{
+  margin-bottom: 22px;
+}
+
+.place-order-btn{
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 8px;
+  /* background-color: rgba(255, 217, 0, 0.838); */
+  background-color: rgb(32, 178, 134);
+  color: white;
+  border: none;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+  margin-bottom: 18px;
+}
