@@ -1,5 +1,6 @@
 console.log('Hello');
 
+
 // const products = [{
 //   product_image : 'images/products/athletic-cotton-socks-6-pairs.jpg',
 //   product_name : 'Black and Gray Athletic Cotton Socks - 6 Pairs',
@@ -41,7 +42,7 @@ console.log('Hello');
 // console.log(products);
 let productsHTML = '';
 products.forEach((product)=>{
-  console.log(product.image);
+  // console.log(product.image);
   const html = `
     <div class="product-container">
     <div class="product-image-container">
@@ -87,7 +88,7 @@ products.forEach((product)=>{
       Added
     </div>
 
-    <button class="add-to-cart-button button-primary">
+    <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id = ${product.id}>
       Add to Cart
     </button>
   </div>`;
@@ -96,6 +97,54 @@ products.forEach((product)=>{
   productsHTML+=html;
 });
 
-console.log(productsHTML);
+// console.log(productsHTML);
+
+// const products = 'Hello I am products';
+
+// console.log(products);
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+const addToCartButton = document.querySelectorAll('.js-add-to-cart');
+
+// console.log(addToCartButton[1]);
+let cartQuantity = 0
+let cartItem = '';
+// cart = null;
+addToCartButton.forEach((button) => {
+  // console.log(button);
+  button.addEventListener('click', ()=> {
+    // console.log('Add to cart button clicked');
+    cartQuantity+=1;
+    document.querySelector('.js-cart-quantity').textContent = cartQuantity;
+    // console.log(button.dataset.productId);
+
+    const productId = button.dataset.productId;
+
+    console.log(productId, typeof(productId));
+
+    let matchingItem;
+
+    cart.forEach((item)=>{
+      if(productId === item.id){
+        matchingItem = item;
+      }
+    });
+
+    if(matchingItem){
+      matchingItem.quantity+=1;
+    }
+    else{
+      cart.push({
+        id:productId,
+        quantity:1
+      });
+    }
+    
+    console.log(cart);
+
+  });
+});
+// const cart = 'I am a cart';
+
+
