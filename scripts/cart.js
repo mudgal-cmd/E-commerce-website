@@ -4,10 +4,6 @@ let cart = JSON.parse(localStorage.getItem('Cart')) || [];
 
 console.log(cart);
 
-document.querySelector('.js-place-order-btn').addEventListener('click', ()=>{
-  console.log(cart);
-});
-
 let deliveryOption = 1;
 cart.forEach((cartItem)=>{
   let html = `

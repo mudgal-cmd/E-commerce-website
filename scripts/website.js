@@ -1,45 +1,3 @@
-console.log('Hello');
-
-
-// const products = [{
-//   product_image : 'images/products/athletic-cotton-socks-6-pairs.jpg',
-//   product_name : 'Black and Gray Athletic Cotton Socks - 6 Pairs',
-//   product_rating : {
-//     stars : 4.5,
-//     count : 87
-//   },
-//   // Since JS has problem working with float, so saving the product price in cents, the price below actually is $10.90
-//   product_priceCents : 1090 
-// },
-// {
-//   product_image : 'images/products/intermediate-composite-basketball.jpg',
-//   product_name: 'Intermediate Size Basketball',
-//   product_rating: {
-//     stars : 0.4,
-//     count : 127
-//   },
-//   product_priceCents : 2095
-// },
-// {
-//   product_image : 'images/products/adults-plain-cotton-tshirt-2-pack-teal.jpg',
-//   product_name : 'Adults Plain Cotton T-Shirt - 2 Pack',
-//   product_rating: {
-//     stars : 4.5,
-//     count : 56
-//   },
-//   product_priceCents : 799
-// },
-// {
-//   product_image : 'images/products/black-2-slot-toaster.jpg',
-//   product_name : '2 Slot Toster - Black',
-//   product_rating : {
-//     stars : 0.5,
-//     count : 2197
-//   },
-//   product_priceCents : 1899
-// }];
-
-// console.log(products);
 let productsHTML = '';
 products.forEach((product)=>{
   // console.log(product.image);
@@ -67,7 +25,7 @@ products.forEach((product)=>{
     </div>
 
     <div class="product-quantity-container">
-      <select>
+      <select class = "js-quantity-selector-${product.id}">
         <option selected value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -100,17 +58,25 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
 const addToCartButton = document.querySelectorAll('.js-add-to-cart');
 
-let cartQuantity = 0
+let cartQuantity=0;
 let cartItem = [];
+
+// const quantitySelectors = document.querySelectorAll('.js-quantity-selector');
 
 addToCartButton.forEach((button) => {
 
   button.addEventListener('click', ()=> {
 
-    cartQuantity+=1;
-    document.querySelector('.js-cart-quantity').textContent = cartQuantity;
-
     const productId = button.dataset.productId;
+
+    let quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
+
+    console.log(quantitySelector);
+    console.log(quantitySelector.value);
+
+    cartQuantity+= Number(quantitySelector.value);
+
+    document.querySelector('.js-cart-quantity').textContent = cartQuantity;
 
     let matchingItem;
 
@@ -126,6 +92,7 @@ addToCartButton.forEach((button) => {
       if(product.id === productId){
         productData = product;
       }
+
     });
 
     if(matchingItem){
@@ -134,7 +101,7 @@ addToCartButton.forEach((button) => {
     else{
       cart.push({
         ...productData,
-        quantity:1
+        quantity:quantitySelector.value
       });
       
     }
