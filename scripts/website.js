@@ -1,3 +1,5 @@
+import {cart} from './cart.js';
+
 let productsHTML = '';
 products.forEach((product)=>{
   // console.log(product.image);
@@ -41,8 +43,8 @@ products.forEach((product)=>{
 
     <div class="product-spacer"></div>
 
-    <div class="added-to-cart">
-      <img src="images/icons/checkmark.png">
+    <div class='added-to-cart js-added-msg-${product.id}'>
+      <img src="images/icons/checked.png" class="checkmark-icon">
       Added
     </div>
 
@@ -60,21 +62,34 @@ const addToCartButton = document.querySelectorAll('.js-add-to-cart');
 
 let cartQuantity=0;
 let cartItem = [];
-
-// const quantitySelectors = document.querySelectorAll('.js-quantity-selector');
-
+let addedToCartMsgElement;
+let timeoutIntervalId;
 addToCartButton.forEach((button) => {
 
   button.addEventListener('click', ()=> {
 
     const productId = button.dataset.productId;
 
+    addedToCartMsgElement = document.querySelector(`.js-added-msg-${productId}`);
+
     let quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
 
     console.log(quantitySelector);
     console.log(quantitySelector.value);
 
-    cartQuantity+= Number(quantitySelector.value);
+    addedToCartMsgElement.classList.add('js-visible-added-to-cart-msg');
+
+    clearInterval(timeoutIntervalId);
+
+    timeoutIntervalId = setTimeout(()=>{
+      addedToCartMsgElement.classList.remove('js-visible-added-to-cart-msg');
+    }, 2000);
+
+    
+
+    let itemQuantity = Number(quantitySelector.value);
+
+    cartQuantity+= itemQuantity;
 
     document.querySelector('.js-cart-quantity').textContent = cartQuantity;
 
@@ -96,12 +111,12 @@ addToCartButton.forEach((button) => {
     });
 
     if(matchingItem){
-      matchingItem.quantity+=1;
+      matchingItem.quantity+=itemQuantity;
     }
     else{
       cart.push({
         ...productData,
-        quantity:quantitySelector.value
+        quantity:itemQuantity
       });
       
     }
@@ -113,5 +128,14 @@ addToCartButton.forEach((button) => {
   });
 });
 
+let intervalId;
 
+function addToCartInterval(){
+  clearInterval(intervalId);
+
+  intervalId = setInterval(()=>{
+    addedToCartMsgElement.classList.remove('js-visible-added-to-cart-msg');
+  }, 2000);
+
+}
 
