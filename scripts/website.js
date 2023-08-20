@@ -1,4 +1,6 @@
-import {cart} from './cart.js';
+import {cart, addToCart} from '../data/cart.js';
+import {products} from '../data/products-data.js';
+import { formatPrice } from './utils/pricing.js';
 
 let productsHTML = '';
 products.forEach((product)=>{
@@ -23,7 +25,7 @@ products.forEach((product)=>{
     </div>
 
     <div class="product-price">
-      ${(product.priceCents/100).toFixed(2)}
+      ${formatPrice(product.priceCents)}
     </div>
 
     <div class="product-quantity-container">
@@ -60,82 +62,44 @@ document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
 const addToCartButton = document.querySelectorAll('.js-add-to-cart');
 
-let cartQuantity=0;
-let cartItem = [];
-let addedToCartMsgElement;
 let timeoutIntervalId;
+
+function updateCartQuantity(){
+  let cartQuantity=0;
+  // cartQuantity+= itemQuantity;
+  cart.forEach((cartItem)=>{
+    cartQuantity +=cartItem.quantity;
+  });
+  document.querySelector('.js-cart-quantity').textContent = cartQuantity;
+
+}
+
+function displayAddedToCartMsg(productId){
+
+  const addedToCartMsgElement = document.querySelector(`.js-added-msg-${productId}`);
+  addedToCartMsgElement.classList.add('js-visible-added-to-cart-msg');
+
+  clearInterval(timeoutIntervalId);
+
+    timeoutIntervalId = setTimeout(()=>{
+      addedToCartMsgElement.classList.remove('js-visible-added-to-cart-msg');
+    }, 2000);
+
+}
+
+
 addToCartButton.forEach((button) => {
 
   button.addEventListener('click', ()=> {
 
     const productId = button.dataset.productId;
 
-    addedToCartMsgElement = document.querySelector(`.js-added-msg-${productId}`);
-
-    let quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
-
-    console.log(quantitySelector);
-    console.log(quantitySelector.value);
-
-    addedToCartMsgElement.classList.add('js-visible-added-to-cart-msg');
-
-    clearInterval(timeoutIntervalId);
-
-    timeoutIntervalId = setTimeout(()=>{
-      addedToCartMsgElement.classList.remove('js-visible-added-to-cart-msg');
-    }, 2000);
-
-    
-
-    let itemQuantity = Number(quantitySelector.value);
-
-    cartQuantity+= itemQuantity;
-
-    document.querySelector('.js-cart-quantity').textContent = cartQuantity;
-
-    let matchingItem;
-
-    cart.forEach((item)=>{
-      if(productId === item.id){
-        matchingItem = item;
-      }
-    });
-
-    let productData ;
-
-    products.forEach((product)=>{
-      if(product.id === productId){
-        productData = product;
-      }
-
-    });
-
-    if(matchingItem){
-      matchingItem.quantity+=itemQuantity;
-    }
-    else{
-      cart.push({
-        ...productData,
-        quantity:itemQuantity
-      });
-      
-    }
-    
-    console.log(cart);
+    addToCart(productId);
+    updateCartQuantity();
+    displayAddedToCartMsg(productId);
 
     localStorage.setItem('Cart', JSON.stringify(cart));
 
   });
 });
-
-let intervalId;
-
-function addToCartInterval(){
-  clearInterval(intervalId);
-
-  intervalId = setInterval(()=>{
-    addedToCartMsgElement.classList.remove('js-visible-added-to-cart-msg');
-  }, 2000);
-
-}
 

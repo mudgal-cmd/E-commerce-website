@@ -1,12 +1,17 @@
-// console.log('I am a cart');
-
-export let cart = JSON.parse(localStorage.getItem('Cart')) || [];
-
-console.log(cart);
+import { cart } from '../data/cart.js';
+import { products } from '../data/products-data.js';
+import { formatPrice } from './utils/pricing.js';
 
 let deliveryOption = 1;
-
 cart.forEach((cartItem)=>{
+  let matchingProduct;
+  products.forEach((product)=>{
+    if(product.id === cartItem.id)
+      matchingProduct = product;
+  });
+
+  console.log(matchingProduct);
+
   let orderSummaryElement = document.querySelector('.order-summary');
     let html = `
     <div class="cart-item-container">
@@ -16,14 +21,14 @@ cart.forEach((cartItem)=>{
     </div>
   
     <div class="cart-item-details-grid">
-      <img class="cart-item-image" src=${cartItem.image}>
+      <img class="cart-item-image" src=${matchingProduct.image}>
   
       <div class="cart-item-details">
         <div class="cart-item-name">
-          ${cartItem.name}
+          ${matchingProduct.name}
         </div>
         <div class="cart-item-price">
-          $${(cartItem.priceCents/100).toFixed(2)}
+          $${formatPrice(matchingProduct.priceCents)}
         </div>
         <div class="cart-item-quantity">
           <span>
@@ -85,28 +90,11 @@ cart.forEach((cartItem)=>{
     </div>
   </div>
     `;
-    console.log(orderSummaryElement);
+    // console.log(orderSummaryElement);
     orderSummaryElement.innerHTML += html;
     deliveryOption+=1;
   });
 
-
-const deleteElements = document.querySelectorAll('.js-delete-item');
-let matchingElement;
-deleteElements.forEach((deleteButton)=>{
-  // console.log(deleteButton.dataset);
-  deleteButton.addEventListener('click', ()=>{
-    console.log(deleteButton.dataset);
-    let deleteProductId = deleteButton.dataset.deleteItem;
-    let indexToDelete;
-    cart.forEach((item)=>{
-      if(item.id === deleteProductId){
-        indexToDelete = cart.indexOf(item);
-      }
-    });
-    cart.splice(indexToDelete,1);
-    console.log(cart);
-    localStorage.setItem('Cart', JSON.stringify(cart));
-  });
-});
-
+// document.querySelector('.js-delete-item').addEventListener('click', ()=>{
+//   console.log('Delete clicked');
+// });
