@@ -138,3 +138,16 @@
 .added-to-cart{
   opacity: 0;
 }
+
+.js-visible-added-to-cart-msg{
+  opacity: 1;
+  display: flex;
+  margin-bottom: 5px;
+  font-size: 15px;
+  color: forestgreen;
+}
+
+.checkmark-icon{
+  width: 20px;
+  margin-right: 3px;
+}
