@@ -3,6 +3,7 @@ import { products } from '../data/products-data.js';
 import { formatPrice } from './utils/pricing.js';
 
 let deliveryOption = 1;
+
 cart.forEach((cartItem)=>{
   let matchingProduct;
   products.forEach((product)=>{
@@ -14,7 +15,7 @@ cart.forEach((cartItem)=>{
 
   let orderSummaryElement = document.querySelector('.order-summary');
     let html = `
-    <div class="cart-item-container">
+    <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
               
     <div class="order-delivery-date">
       Delivery date: Tuesday, June 21
@@ -108,6 +109,8 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
     deleteItemId = deleteLink.dataset.deleteItem;
 
     deleteFromCart(deleteItemId);
+    let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
+    cartItemTODelete.remove();
     console.log(cart);
   });
   
