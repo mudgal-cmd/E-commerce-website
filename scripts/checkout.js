@@ -1,4 +1,4 @@
-import { cart } from '../data/cart.js';
+import { cart, deleteFromCart } from '../data/cart.js';
 import { products } from '../data/products-data.js';
 import { formatPrice } from './utils/pricing.js';
 
@@ -10,7 +10,7 @@ cart.forEach((cartItem)=>{
       matchingProduct = product;
   });
 
-  console.log(matchingProduct);
+  // console.log(matchingProduct);
 
   let orderSummaryElement = document.querySelector('.order-summary');
     let html = `
@@ -98,3 +98,17 @@ cart.forEach((cartItem)=>{
 // document.querySelector('.js-delete-item').addEventListener('click', ()=>{
 //   console.log('Delete clicked');
 // });
+
+document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
+  let deleteItemId;
+  deleteLink.addEventListener('click', ()=>{
+    // console.log(cart);
+    console.log('delete');
+    console.log(deleteLink.dataset);
+    deleteItemId = deleteLink.dataset.deleteItem;
+
+    deleteFromCart(deleteItemId);
+    console.log(cart);
+  });
+  
+});
