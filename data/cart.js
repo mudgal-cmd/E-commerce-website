@@ -4,7 +4,7 @@ import {products} from './products-data.js';
 
 // export let cart = JSON.parse(localStorage.getItem('Cart')) || [];
 
-export let cart = [{
+export let cart = JSON.parse(localStorage.getItem('Cart')) || [{
   id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
   quantity: 1
 },  
@@ -41,43 +41,9 @@ export let cart = [{
         });
         
       }
-      
+      saveCartToStorage();
       console.log(cart);
   }
-
-// function deleteItemFromCart(){
-
-//   const deleteElements = document.querySelectorAll('.js-delete-item');
-//   let deleteElement;
-//   deleteElements.forEach((button)=>{
-//     deleteElement = button.dataset.cartItemId;
-//   });
-
-//   console.log(deleteElement);
-
-// }
-// deleteItemFromCart();
-
-// console.log(document.querySelector('.js-delete-item'));
-
-// const deleteElements = document.querySelectorAll('.js-delete-item');
-// let matchingElement;
-// deleteElements.forEach((deleteButton)=>{
-//   // console.log(deleteButton.dataset);
-//   deleteButton.addEventListener('click', ()=>{
-//     console.log(deleteButton.dataset);
-//     let deleteProductId = deleteButton.dataset.deleteItem;
-//     let indexToDelete;
-//     cart.forEach((item)=>{
-//       if(item.id === deleteProductId){
-//         indexToDelete = cart.indexOf(item);
-//       }
-//     });
-//     cart.splice(indexToDelete,1);
-//     console.log(cart);
-//     localStorage.setItem('Cart', JSON.stringify(cart));
-//   });
-// });
 
 export function deleteFromCart(deleteItemId){
 
@@ -90,4 +56,8 @@ export function deleteFromCart(deleteItemId){
 
   cart.splice(indexOfDeletedItem, 1);
 
+}
+
+export function saveCartToStorage(){
+  localStorage.setItem('Cart', JSON.stringify(cart));
 }

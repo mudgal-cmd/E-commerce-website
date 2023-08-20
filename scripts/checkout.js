@@ -1,4 +1,4 @@
-import { cart, deleteFromCart } from '../data/cart.js';
+import { cart, deleteFromCart, saveCartToStorage } from '../data/cart.js';
 import { products } from '../data/products-data.js';
 import { formatPrice } from './utils/pricing.js';
 
@@ -111,6 +111,7 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
     deleteFromCart(deleteItemId);
     let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
     cartItemTODelete.remove();
+    saveCartToStorage();
     console.log(cart);
   });
   

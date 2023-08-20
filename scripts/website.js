@@ -98,8 +98,6 @@ addToCartButton.forEach((button) => {
     updateCartQuantity();
     displayAddedToCartMsg(productId);
 
-    localStorage.setItem('Cart', JSON.stringify(cart));
-
   });
 });
 
