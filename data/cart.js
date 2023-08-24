@@ -56,6 +56,7 @@ export function deleteFromCart(deleteItemId){
 
   cart.splice(indexOfDeletedItem, 1);
 
+
 }
 
 export function saveCartToStorage(){

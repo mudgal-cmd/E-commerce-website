@@ -4,7 +4,6 @@ import { formatPrice } from './utils/pricing.js';
 
 let productsHTML = '';
 products.forEach((product)=>{
-  // console.log(product.image);
   const html = `
     <div class="product-container">
     <div class="product-image-container">
@@ -65,14 +64,16 @@ const addToCartButton = document.querySelectorAll('.js-add-to-cart');
 let timeoutIntervalId;
 
 function updateCartQuantity(){
-  let cartQuantity=0;
-  // cartQuantity+= itemQuantity;
+  let cartQuantity= 0;
   cart.forEach((cartItem)=>{
     cartQuantity +=cartItem.quantity;
   });
+  
   document.querySelector('.js-cart-quantity').textContent = cartQuantity;
-
+  return cartQuantity;
 }
+
+document.addEventListener('DOMContentLoaded', updateCartQuantity); 
 
 function displayAddedToCartMsg(productId){
 
