@@ -36,7 +36,7 @@ cart.forEach((cartItem)=>{
           <span>
             Quantity: <span class="quantity-label">${cartItem.quantity}</span>
           </span>
-          <span class="cart-item-quantity-update-link js-update-item">
+          <span class="cart-item-quantity-update-link js-update-item" data-update-item-id = ${cartItem.id}>
             Update
           </span>
           <span class="cart-item-quantity-delete-link js-delete-item" data-delete-item = ${cartItem.id}>
@@ -96,29 +96,10 @@ cart.forEach((cartItem)=>{
     deliveryOption+=1;
   });
 
-document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
-  let deleteItemId;
-  deleteLink.addEventListener('click', ()=>{
-    // console.log(cart);
-    console.log('delete');
-    console.log(deleteLink.dataset);
-    deleteItemId = deleteLink.dataset.deleteItem;
 
-    deleteFromCart(deleteItemId);
-    let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
-    cartItemTODelete.remove();
-    saveCartToStorage();
-    displayOrderNetTotal();
-    console.log(cart);
-  });
-  
-});
 
 export function calculateCartPrice(){
 
-  // cart.forEach((cartItem)=>{
-  //   console.log('Inside calculate price function');
-  // });
   console.log('Inside calculate price function');
   let matchingItem;
 
@@ -130,18 +111,10 @@ export function calculateCartPrice(){
       if(cartItem.id === product.id)
         matchingItem = product;
     })
-    console.log(matchingItem);
 
     cartItemsPrice += matchingItem.priceCents*cartItem.quantity;
 
-    // console.log(cartItemsPrice);
-
   });
-
-  // console.log(formatPrice(cartItemsPrice));
-
-  console.log('printing value of radio');
-  console.log(document.querySelector('.js-delivery-option-input').value);
 
   return cartItemsPrice;
 
@@ -153,5 +126,83 @@ function displayOrderNetTotal(){
 
 document.addEventListener('DOMContentLoaded', displayOrderNetTotal);
 
+document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
+  let deleteItemId;
+  deleteLink.addEventListener('click', ()=>{
+
+    deleteItemId = deleteLink.dataset.deleteItem;
+
+    deleteFromCart(deleteItemId);
+    let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
+    cartItemTODelete.remove();
+    saveCartToStorage();
+    displayOrderNetTotal();
+  });
+  
+});
+
+// Update item quantity from checkout page
 
 
+function updateQuantityFromCheckout(){
+  let matchingUpdatableItem;
+  console.log('Update clicked');
+
+  
+  let updateLinkId;
+  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+    // updateLink.innerHTML = `<input type="number" min = "1" max = "10" value = >`;
+    updateLinkId = updateLink.dataset.updateItemId;
+
+    cart.forEach((cartItem)=>{
+      if(cartItem.id === updateLinkId)
+        matchingUpdatableItem = cartItem;
+    });
+
+    updateLink.innerHTML = `
+    <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
+    <span class = "js-save-quantity">Save</span>
+    `;
+
+  });
+
+  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+    updateLink.addEventListener('click', updateCheckoutHeaderQuantity);
+  });
+
+  // cart.forEach((cartItem)=>{
+  //   if(cartItem.id === updateLinkId)
+  //     matchingUpdatableItem = cartItem;
+  // });
+
+  // document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+  //   updateLink.innerHTML = `
+  //     <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
+  //     <span class = "js-save-quantity">Save</span>
+  //     `;
+  //   // updateLinkId = updateLink.dataset.updateItemId;
+  // });
+
+}
+
+// document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+//   updateLink.addEventListener('click', updateQuantityFromCheckout);
+// });
+
+// updating the cart quantity in the checkout header
+
+function updateCheckoutHeaderQuantity(){
+  let checkoutHeaderQuantity = 0;
+
+  cart.forEach((cartItem)=>{
+    checkoutHeaderQuantity+=cartItem.quantity;
+    // console.log(cartItem.quantity);
+  });
+
+  document.querySelector('.js-checkout-header-quantity').textContent = `${checkoutHeaderQuantity} items)`;
+
+  // console.log(checkoutHeaderQuantity);
+
+}
+
+document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
