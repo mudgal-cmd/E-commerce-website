@@ -1,6 +1,7 @@
 import { cart, deleteFromCart, saveCartToStorage } from '../data/cart.js';
 import { products } from '../data/products-data.js';
 import { formatPrice } from './utils/pricing.js';
+import { orderNetTotal } from './order-payments.js';
 
 let deliveryOption = 1;
 
@@ -35,7 +36,7 @@ cart.forEach((cartItem)=>{
           <span>
             Quantity: <span class="quantity-label">${cartItem.quantity}</span>
           </span>
-          <span class="cart-item-quantity-update-link">
+          <span class="cart-item-quantity-update-link js-update-item" data-update-item-id = ${cartItem.id}>
             Update
           </span>
           <span class="cart-item-quantity-delete-link js-delete-item" data-delete-item = ${cartItem.id}>
@@ -62,7 +63,7 @@ cart.forEach((cartItem)=>{
         </div>
   
         <div class="delivery-option">
-          <input type="radio" class="delivery-option-input" name="delivery-option-${deliveryOption}">
+          <input type="radio" class="delivery-option-input js-delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
               Wednesday, June 15
@@ -91,28 +92,117 @@ cart.forEach((cartItem)=>{
     </div>
   </div>
     `;
-    // console.log(orderSummaryElement);
     orderSummaryElement.innerHTML += html;
     deliveryOption+=1;
   });
 
-// document.querySelector('.js-delete-item').addEventListener('click', ()=>{
-//   console.log('Delete clicked');
-// });
+
+
+export function calculateCartPrice(){
+
+  console.log('Inside calculate price function');
+  let matchingItem;
+
+  let cartItemsPrice = 0;
+
+  cart.forEach((cartItem)=>{
+
+    products.forEach((product)=>{
+      if(cartItem.id === product.id)
+        matchingItem = product;
+    })
+
+    cartItemsPrice += matchingItem.priceCents*cartItem.quantity;
+
+  });
+
+  return cartItemsPrice;
+
+}
+
+function displayOrderNetTotal(){
+  document.querySelector('.js-order-net-total').textContent = `$${formatPrice(calculateCartPrice())}`;
+}
+
+document.addEventListener('DOMContentLoaded', displayOrderNetTotal);
 
 document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   let deleteItemId;
   deleteLink.addEventListener('click', ()=>{
-    // console.log(cart);
-    console.log('delete');
-    console.log(deleteLink.dataset);
+
     deleteItemId = deleteLink.dataset.deleteItem;
 
     deleteFromCart(deleteItemId);
     let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
     cartItemTODelete.remove();
     saveCartToStorage();
-    console.log(cart);
+    displayOrderNetTotal();
   });
   
 });
+
+// Update item quantity from checkout page
+
+
+function updateQuantityFromCheckout(){
+  let matchingUpdatableItem;
+  console.log('Update clicked');
+
+  
+  let updateLinkId;
+  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+    // updateLink.innerHTML = `<input type="number" min = "1" max = "10" value = >`;
+    updateLinkId = updateLink.dataset.updateItemId;
+
+    cart.forEach((cartItem)=>{
+      if(cartItem.id === updateLinkId)
+        matchingUpdatableItem = cartItem;
+    });
+
+    updateLink.innerHTML = `
+    <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
+    <span class = "js-save-quantity">Save</span>
+    `;
+
+  });
+
+  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+    updateLink.addEventListener('click', updateCheckoutHeaderQuantity);
+  });
+
+  // cart.forEach((cartItem)=>{
+  //   if(cartItem.id === updateLinkId)
+  //     matchingUpdatableItem = cartItem;
+  // });
+
+  // document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+  //   updateLink.innerHTML = `
+  //     <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
+  //     <span class = "js-save-quantity">Save</span>
+  //     `;
+  //   // updateLinkId = updateLink.dataset.updateItemId;
+  // });
+
+}
+
+// document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+//   updateLink.addEventListener('click', updateQuantityFromCheckout);
+// });
+
+// updating the cart quantity in the checkout header
+
+function updateCheckoutHeaderQuantity(){
+  let checkoutHeaderQuantity = 0;
+
+  cart.forEach((cartItem)=>{
+    checkoutHeaderQuantity+=cartItem.quantity;
+    // console.log(cartItem.quantity);
+  });
+
+  document.querySelector('.js-checkout-header-quantity').textContent = `${checkoutHeaderQuantity} items)`;
+
+  // console.log(checkoutHeaderQuantity);
+
+}
+
+document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
