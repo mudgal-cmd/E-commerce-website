@@ -3,7 +3,6 @@ import {products} from './products-data.js';
 // console.log('I am a cart');
 
 // export let cart = JSON.parse(localStorage.getItem('Cart')) || [];
-
 export let cart = JSON.parse(localStorage.getItem('Cart')) || [{
   id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
   quantity: 1
@@ -55,10 +54,20 @@ export function deleteFromCart(deleteItemId){
   });
 
   cart.splice(indexOfDeletedItem, 1);
-
+  
 
 }
 
 export function saveCartToStorage(){
   localStorage.setItem('Cart', JSON.stringify(cart));
+}
+
+export function calculateCartQuantity(){
+  let cartQuantity = 0;
+  cart.forEach((cartItem)=>{
+    cartQuantity+=cartItem.quantity;
+  });
+  
+  console.log(`The cart quantity is ${cartQuantity}`);
+  return cartQuantity;
 }

@@ -2,6 +2,7 @@ import { cart, deleteFromCart, saveCartToStorage } from '../data/cart.js';
 import { products } from '../data/products-data.js';
 import { formatPrice } from './utils/pricing.js';
 import { orderNetTotal } from './order-payments.js';
+import { calculateCartQuantity } from '../data/cart.js';
 
 let deliveryOption = 1;
 
@@ -11,6 +12,8 @@ cart.forEach((cartItem)=>{
     if(product.id === cartItem.id)
       matchingProduct = product;
   });
+
+  // 
 
   // console.log(matchingProduct);
 
@@ -50,7 +53,7 @@ cart.forEach((cartItem)=>{
         <div class="delivery-options-title">
           Choose a delivery option:
         </div>
-        <div class="delivery-option">
+        <div class="delivery-option" data-delivery-item = "Dtype1">
           <input type="radio" checked class="delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
@@ -62,7 +65,7 @@ cart.forEach((cartItem)=>{
           </div>
         </div>
   
-        <div class="delivery-option">
+        <div class="delivery-option" data-delivery-item = "Dtype2">
           <input type="radio" class="delivery-option-input js-delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
@@ -75,7 +78,7 @@ cart.forEach((cartItem)=>{
           </div>
          
   
-        <div class="delivery-option">
+        <div class="delivery-option" data-delivery-item = "Dtype3">
           <input type="radio" class="delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
@@ -120,6 +123,7 @@ export function calculateCartPrice(){
 
 }
 
+//displaying order net total
 function displayOrderNetTotal(){
   document.querySelector('.js-order-net-total').textContent = `$${formatPrice(calculateCartPrice())}`;
 }
@@ -130,9 +134,11 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   let deleteItemId;
   deleteLink.addEventListener('click', ()=>{
 
+    //Using the data attribute to uniquely identify the selected item to be deleted.
     deleteItemId = deleteLink.dataset.deleteItem;
 
     deleteFromCart(deleteItemId);
+    updateCheckoutHeaderQuantity();
     let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
     cartItemTODelete.remove();
     saveCartToStorage();
@@ -141,35 +147,42 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   
 });
 
+
+
 // Update item quantity from checkout page
 
 
-function updateQuantityFromCheckout(){
-  let matchingUpdatableItem;
-  console.log('Update clicked');
+// function updateQuantityFromCheckout(){
+//   let matchingUpdatableItem;
+//   console.log('Update clicked');
 
   
-  let updateLinkId;
-  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-    // updateLink.innerHTML = `<input type="number" min = "1" max = "10" value = >`;
-    updateLinkId = updateLink.dataset.updateItemId;
+//   let updateLinkId;
+//   document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+//     // updateLink.innerHTML = `<input type="number" min = "1" max = "10" value = >`;
+//     updateLinkId = updateLink.dataset.updateItemId;
 
-    cart.forEach((cartItem)=>{
-      if(cartItem.id === updateLinkId)
-        matchingUpdatableItem = cartItem;
-    });
+//     cart.forEach((cartItem)=>{
+//       if(cartItem.id === updateLinkId)
+//         matchingUpdatableItem = cartItem;
+//     });
 
-    updateLink.innerHTML = `
-    <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
-    <span class = "js-save-quantity">Save</span>
-    `;
+//     updateLink.innerHTML = `
+//     <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
+//     <span class = "js-save-quantity">Save</span>
+//     `;
 
-  });
+//   });
 
-  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-    updateLink.addEventListener('click', updateCheckoutHeaderQuantity);
-  });
+//   document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
+//     updateLink.addEventListener('click', updateCheckoutHeaderQuantity);
+//   });
 
+
+
+
+
+  
   // cart.forEach((cartItem)=>{
   //   if(cartItem.id === updateLinkId)
   //     matchingUpdatableItem = cartItem;
@@ -183,7 +196,7 @@ function updateQuantityFromCheckout(){
   //   // updateLinkId = updateLink.dataset.updateItemId;
   // });
 
-}
+// }
 
 // document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
 //   updateLink.addEventListener('click', updateQuantityFromCheckout);
@@ -194,15 +207,27 @@ function updateQuantityFromCheckout(){
 function updateCheckoutHeaderQuantity(){
   let checkoutHeaderQuantity = 0;
 
-  cart.forEach((cartItem)=>{
-    checkoutHeaderQuantity+=cartItem.quantity;
-    // console.log(cartItem.quantity);
-  });
+  checkoutHeaderQuantity = calculateCartQuantity();
 
   document.querySelector('.js-checkout-header-quantity').textContent = `${checkoutHeaderQuantity} items)`;
 
-  // console.log(checkoutHeaderQuantity);
+  // console.log(updateCartQuantity());
 
 }
 
 document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
+
+
+
+// calculateCartQuantity();
+
+// console.log(document.getElementsByClassName('delivery-option')[0].dataset);
+let deliveryOptionList = document.getElementsByClassName('delivery-option-input');
+// console.log(deliveryOptionList);
+for(let i of deliveryOptionList){
+  if(i.checked){
+    // console.log(i.dataset);
+    console.log(i.dataset);
+  }
+}
+// console.log(document.getElementsByClassName('delivery-option'))
