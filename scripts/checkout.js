@@ -147,61 +147,6 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   
 });
 
-
-
-// Update item quantity from checkout page
-
-
-// function updateQuantityFromCheckout(){
-//   let matchingUpdatableItem;
-//   console.log('Update clicked');
-
-  
-//   let updateLinkId;
-//   document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-//     // updateLink.innerHTML = `<input type="number" min = "1" max = "10" value = >`;
-//     updateLinkId = updateLink.dataset.updateItemId;
-
-//     cart.forEach((cartItem)=>{
-//       if(cartItem.id === updateLinkId)
-//         matchingUpdatableItem = cartItem;
-//     });
-
-//     updateLink.innerHTML = `
-//     <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
-//     <span class = "js-save-quantity">Save</span>
-//     `;
-
-//   });
-
-//   document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-//     updateLink.addEventListener('click', updateCheckoutHeaderQuantity);
-//   });
-
-
-
-
-
-  
-  // cart.forEach((cartItem)=>{
-  //   if(cartItem.id === updateLinkId)
-  //     matchingUpdatableItem = cartItem;
-  // });
-
-  // document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-  //   updateLink.innerHTML = `
-  //     <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
-  //     <span class = "js-save-quantity">Save</span>
-  //     `;
-  //   // updateLinkId = updateLink.dataset.updateItemId;
-  // });
-
-// }
-
-// document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-//   updateLink.addEventListener('click', updateQuantityFromCheckout);
-// });
-
 // updating the cart quantity in the checkout header
 
 function updateCheckoutHeaderQuantity(){
@@ -211,15 +156,11 @@ function updateCheckoutHeaderQuantity(){
 
   document.querySelector('.js-checkout-header-quantity').textContent = `${checkoutHeaderQuantity} items)`;
 
-  // console.log(updateCartQuantity());
-
 }
 
 document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
 
 
-
-// calculateCartQuantity();
 
 // console.log(document.getElementsByClassName('delivery-option')[0].dataset);
 let deliveryOptionList = document.getElementsByClassName('delivery-option-input');
@@ -230,4 +171,4 @@ for(let i of deliveryOptionList){
     console.log(i.dataset);
   }
 }
-// console.log(document.getElementsByClassName('delivery-option'))
+

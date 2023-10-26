@@ -68,6 +68,5 @@ export function calculateCartQuantity(){
     cartQuantity+=cartItem.quantity;
   });
   
-  console.log(`The cart quantity is ${cartQuantity}`);
   return cartQuantity;
 }
