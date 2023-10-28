@@ -42,6 +42,8 @@ cart.forEach((cartItem)=>{
           <span class="cart-item-quantity-update-link js-update-item" data-update-item-id = ${cartItem.id}>
             Update
           </span>
+          <input type = "number" max = "10" min = "1" class ="quantity-input" value= "${cartItem.quantity}">
+          <span class = "save-quantity-link js-save-quantity-link">Save</span>
           <span class="cart-item-quantity-delete-link js-delete-item" data-delete-item = ${cartItem.id}>
             Delete
           </span>
@@ -147,6 +149,7 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   
 });
 
+
 // updating the cart quantity in the checkout header
 
 function updateCheckoutHeaderQuantity(){
@@ -161,14 +164,55 @@ function updateCheckoutHeaderQuantity(){
 document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
 
 
+// Modifying the item quantity at the cart page
+
+function modifyItemQuantity(){
+  let updateLinkList = document.querySelectorAll('.js-update-item');
+
+  updateLinkList.forEach((update)=>{
+    let matchingItem;
+    // added event listener to every update link
+    update.addEventListener('click', ()=>{
+      console.log(update.dataset.updateItemId);
+    
+      matchingItem = update.dataset.updateItemId;
+
+      // Adding the class to the cart item container to make quantity modification elements ('input' and 'span') visible.
+      document.querySelector(`.js-cart-item-container-${update.dataset.updateItemId}`).classList.add('is-editing-quantity');
+      update.classList.add('js-hide-update-link'); //added a class to hide update link when modifying the cart quantity
+
+    });
+
+    // added HTML to 'modify' the cart quantity and 'save' it.
+    let saveElement = document.querySelectorAll('.js-save-quantity-link');
+    saveElement.forEach((save)=>{
+      save.addEventListener('click', ()=>{
+        document.querySelector(`.js-cart-item-container-${update.dataset.updateItemId}`).classList.remove('is-editing-quantity');
+        update.classList.remove('js-hide-update-link'); //removing the class to show update link when quantity is saved.
+        // console.log(document.querySelector('.quantity-input').value);
+        cart.forEach((cartItem)=>{
+          if(cartItem.id === matchingItem){
+            cartItem.quantity = Number(document.querySelector('.quantity-input').value);
+          }
+          
+        });
+        saveCartToStorage();
+      });
+    });
+
+  });
+}
+modifyItemQuantity();
+
+
 
 // console.log(document.getElementsByClassName('delivery-option')[0].dataset);
 let deliveryOptionList = document.getElementsByClassName('delivery-option-input');
 // console.log(deliveryOptionList);
-for(let i of deliveryOptionList){
-  if(i.checked){
-    // console.log(i.dataset);
-    console.log(i.dataset);
-  }
-}
+// for(let i of deliveryOptionList){
+//   if(i.checked){
+//     // console.log(i.dataset);
+//     console.log(i.dataset);
+//   }
+// }
 
