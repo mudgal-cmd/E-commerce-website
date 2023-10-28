@@ -2,6 +2,7 @@ import { cart, deleteFromCart, saveCartToStorage } from '../data/cart.js';
 import { products } from '../data/products-data.js';
 import { formatPrice } from './utils/pricing.js';
 import { orderNetTotal } from './order-payments.js';
+import { calculateCartQuantity } from '../data/cart.js';
 
 let deliveryOption = 1;
 
@@ -11,6 +12,8 @@ cart.forEach((cartItem)=>{
     if(product.id === cartItem.id)
       matchingProduct = product;
   });
+
+  // 
 
   // console.log(matchingProduct);
 
@@ -39,6 +42,8 @@ cart.forEach((cartItem)=>{
           <span class="cart-item-quantity-update-link js-update-item" data-update-item-id = ${cartItem.id}>
             Update
           </span>
+          <input type = "number" max = "10" min = "1" class ="quantity-input" value= "${cartItem.quantity}">
+          <span class = "save-quantity-link js-save-quantity-link">Save</span>
           <span class="cart-item-quantity-delete-link js-delete-item" data-delete-item = ${cartItem.id}>
             Delete
           </span>
@@ -50,7 +55,7 @@ cart.forEach((cartItem)=>{
         <div class="delivery-options-title">
           Choose a delivery option:
         </div>
-        <div class="delivery-option">
+        <div class="delivery-option" data-delivery-item = "Dtype1">
           <input type="radio" checked class="delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
@@ -62,7 +67,7 @@ cart.forEach((cartItem)=>{
           </div>
         </div>
   
-        <div class="delivery-option">
+        <div class="delivery-option" data-delivery-item = "Dtype2">
           <input type="radio" class="delivery-option-input js-delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
@@ -75,7 +80,7 @@ cart.forEach((cartItem)=>{
           </div>
          
   
-        <div class="delivery-option">
+        <div class="delivery-option" data-delivery-item = "Dtype3">
           <input type="radio" class="delivery-option-input" name="delivery-option-${deliveryOption}">
           <div class="delivery-details">
             <div class="delivery-option-date">
@@ -120,6 +125,7 @@ export function calculateCartPrice(){
 
 }
 
+//displaying order net total
 function displayOrderNetTotal(){
   document.querySelector('.js-order-net-total').textContent = `$${formatPrice(calculateCartPrice())}`;
 }
@@ -130,9 +136,11 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   let deleteItemId;
   deleteLink.addEventListener('click', ()=>{
 
+    //Using the data attribute to uniquely identify the selected item to be deleted.
     deleteItemId = deleteLink.dataset.deleteItem;
 
     deleteFromCart(deleteItemId);
+    updateCheckoutHeaderQuantity();
     let cartItemTODelete = document.querySelector(`.js-cart-item-container-${deleteItemId}`);
     cartItemTODelete.remove();
     saveCartToStorage();
@@ -141,68 +149,70 @@ document.querySelectorAll('.js-delete-item').forEach((deleteLink) => {
   
 });
 
-// Update item quantity from checkout page
-
-
-function updateQuantityFromCheckout(){
-  let matchingUpdatableItem;
-  console.log('Update clicked');
-
-  
-  let updateLinkId;
-  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-    // updateLink.innerHTML = `<input type="number" min = "1" max = "10" value = >`;
-    updateLinkId = updateLink.dataset.updateItemId;
-
-    cart.forEach((cartItem)=>{
-      if(cartItem.id === updateLinkId)
-        matchingUpdatableItem = cartItem;
-    });
-
-    updateLink.innerHTML = `
-    <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
-    <span class = "js-save-quantity">Save</span>
-    `;
-
-  });
-
-  document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-    updateLink.addEventListener('click', updateCheckoutHeaderQuantity);
-  });
-
-  // cart.forEach((cartItem)=>{
-  //   if(cartItem.id === updateLinkId)
-  //     matchingUpdatableItem = cartItem;
-  // });
-
-  // document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-  //   updateLink.innerHTML = `
-  //     <input type="number" class="js-update-quantity-input" min = "1" max = "10" value = "4">
-  //     <span class = "js-save-quantity">Save</span>
-  //     `;
-  //   // updateLinkId = updateLink.dataset.updateItemId;
-  // });
-
-}
-
-// document.querySelectorAll('.js-update-item').forEach((updateLink)=>{
-//   updateLink.addEventListener('click', updateQuantityFromCheckout);
-// });
 
 // updating the cart quantity in the checkout header
 
 function updateCheckoutHeaderQuantity(){
   let checkoutHeaderQuantity = 0;
 
-  cart.forEach((cartItem)=>{
-    checkoutHeaderQuantity+=cartItem.quantity;
-    // console.log(cartItem.quantity);
-  });
+  checkoutHeaderQuantity = calculateCartQuantity();
 
   document.querySelector('.js-checkout-header-quantity').textContent = `${checkoutHeaderQuantity} items)`;
-
-  // console.log(checkoutHeaderQuantity);
 
 }
 
 document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
+
+
+// Modifying the item quantity at the cart page
+
+function modifyItemQuantity(){
+  let updateLinkList = document.querySelectorAll('.js-update-item');
+
+  updateLinkList.forEach((update)=>{
+    let matchingItem;
+    // added event listener to every update link
+    update.addEventListener('click', ()=>{
+      console.log(update.dataset.updateItemId);
+    
+      matchingItem = update.dataset.updateItemId;
+
+      // Adding the class to the cart item container to make quantity modification elements ('input' and 'span') visible.
+      document.querySelector(`.js-cart-item-container-${update.dataset.updateItemId}`).classList.add('is-editing-quantity');
+      update.classList.add('js-hide-update-link'); //added a class to hide update link when modifying the cart quantity
+
+    });
+
+    // added HTML to 'modify' the cart quantity and 'save' it.
+    let saveElement = document.querySelectorAll('.js-save-quantity-link');
+    saveElement.forEach((save)=>{
+      save.addEventListener('click', ()=>{
+        document.querySelector(`.js-cart-item-container-${update.dataset.updateItemId}`).classList.remove('is-editing-quantity');
+        update.classList.remove('js-hide-update-link'); //removing the class to show update link when quantity is saved.
+        // console.log(document.querySelector('.quantity-input').value);
+        cart.forEach((cartItem)=>{
+          if(cartItem.id === matchingItem){
+            cartItem.quantity = Number(document.querySelector('.quantity-input').value);
+          }
+          
+        });
+        saveCartToStorage();
+      });
+    });
+
+  });
+}
+modifyItemQuantity();
+
+
+
+// console.log(document.getElementsByClassName('delivery-option')[0].dataset);
+let deliveryOptionList = document.getElementsByClassName('delivery-option-input');
+// console.log(deliveryOptionList);
+// for(let i of deliveryOptionList){
+//   if(i.checked){
+//     // console.log(i.dataset);
+//     console.log(i.dataset);
+//   }
+// }
+

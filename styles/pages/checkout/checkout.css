@@ -91,14 +91,16 @@
 }
 
 .cart-item-quantity-update-link,
-.cart-item-quantity-delete-link{
+.cart-item-quantity-delete-link,
+.save-quantity-link{
   color: rgb(1, 124, 182);
   cursor: pointer;
   padding-left: 3px;
 }
 
 .cart-item-quantity-update-link:hover,
-.cart-item-quantity-delete-link:hover{
+.cart-item-quantity-delete-link:hover,
+.save-quantity-link:hover{
   color: rgb(196, 80, 0);
 }
 
@@ -215,4 +217,21 @@
   border: none;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
   margin-bottom: 18px;
+}
+
+.quantity-input,
+.save-quantity-link{
+  display: none;
+}
+
+.quantity-input{
+  width: 40px;
+}
+
+.is-editing-quantity .quantity-input, .is-editing-quantity .save-quantity-link{
+  display: initial;
+}
+
+.js-hide-update-link{
+  display: none;
 }
