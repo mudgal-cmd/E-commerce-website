@@ -70,3 +70,21 @@ export function calculateCartQuantity(){
   
   return cartQuantity;
 }
+
+export function updateQuantity(itemId, newQuantity){
+  cart.forEach((cartItem)=>{
+    if(itemId === cartItem.id){
+      cartItem.quantity = newQuantity;
+    }
+  });
+}
+
+export function getItemQuantityById(itemId){
+  let quantity;
+  cart.forEach((cartItem)=>{
+    if(cartItem.id === itemId){
+      quantity = cartItem.quantity;
+    }
+  });
+  return quantity;
+}
