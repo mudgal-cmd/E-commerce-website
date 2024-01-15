@@ -230,13 +230,5 @@ document.addEventListener('DOMContentLoaded', updateCheckoutHeaderQuantity);
 
 
 
-// console.log(document.getElementsByClassName('delivery-option')[0].dataset);
 let deliveryOptionList = document.getElementsByClassName('delivery-option-input');
-// console.log(deliveryOptionList);
-// for(let i of deliveryOptionList){
-//   if(i.checked){
-//     // console.log(i.dataset);
-//     console.log(i.dataset);
-//   }
-// }
 
